@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ui_first_project/Pages/MainPage.dart';
-import 'package:ui_first_project/Pages/SignupPage.dart';
 
-class MyLoginPage extends StatelessWidget {
+import 'package:ui_first_project/Pages/LoginPage.dart';
+import 'package:ui_first_project/Pages/MainPage.dart';
+
+class MySignUpPage extends StatefulWidget {
+  @override
+  State<MySignUpPage> createState() => _MySignUpPageState();
+}
+
+class _MySignUpPageState extends State<MySignUpPage> {
   final _formKey = GlobalKey<FormState>();
+
   bool _obscureText = true;
+
   bool _issubmitting = false;
-  late String _username, _email, _password;
+  int _groupValue = -1;
+  late String _username, _email, _password, _gender;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +39,7 @@ class MyLoginPage extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    child: Text("Welcome",
+                    child: Text("SignUp",
                         style: GoogleFonts.lato(
                           fontWeight: FontWeight.w900,
                           color: Colors.black,
@@ -38,17 +48,71 @@ class MyLoginPage extends StatelessWidget {
                         )),
                   ),
                   Container(
-                      padding:
-                          const EdgeInsets.only(top: 40, right: 30, left: 30),
-                      child: _showEmailInput()),
+                    padding:
+                        const EdgeInsets.only(top: 15, right: 30, left: 30),
+                    child: _showUsernameInput(),
+                  ),
                   Container(
-                      padding:
-                          const EdgeInsets.only(top: 30, right: 30, left: 30),
-                      child: _showPasswordInput()),
+                    padding:
+                        const EdgeInsets.only(top: 10, right: 30, left: 30),
+                    child: _showEmailInput(),
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.only(top: 10, right: 30, left: 50),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: RadioListTile(
+                                      value: 0,
+                                      groupValue: _groupValue,
+                                      title: Text("Male"),
+                                      onChanged: (newValue) => setState(() {
+                                        _groupValue = newValue!;
+                                        print(newValue);
+                                      }),
+                                      activeColor: Colors.green,
+                                      selected: false,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: RadioListTile(
+                                      value: 1,
+                                      groupValue: _groupValue,
+                                      title: Text("Female"),
+                                      onChanged: (newValue) => setState(() {
+                                        _groupValue = newValue!;
+
+                                        print(newValue);
+                                      }),
+                                      activeColor: Colors.green,
+                                      selected: false,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.only(top: 10, right: 30, left: 30),
+                    child: _showPasswordInput(),
+                  ),
                   Container(
                     padding: const EdgeInsets.only(top: 4, right: 30, left: 30),
                     child: TextButton(
-                      child: Text(
+                      child: const Text(
                         'Forgot you password?',
                         style: TextStyle(fontSize: 13, color: Colors.grey),
                       ),
@@ -67,7 +131,7 @@ class MyLoginPage extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20))),
                         child: const Text(
-                          'Login',
+                          'SingUP',
                           style: TextStyle(fontSize: 20, color: Colors.white),
                         ),
                         onPressed: () {
@@ -87,17 +151,16 @@ class MyLoginPage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 4, right: 30, left: 30),
                     child: TextButton(
                       child: RichText(
-                        text: TextSpan(
-                          style: const TextStyle(
+                        text: const TextSpan(
+                          style: TextStyle(
                             fontSize: 14.0,
                             color: Colors.grey,
                           ),
                           children: <TextSpan>[
-                            TextSpan(text: 'Don\'t have an account? '),
+                            TextSpan(text: 'Have an existing ? '),
                             TextSpan(
-                                text: 'sign up',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
+                                text: 'sign in',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ),
@@ -105,7 +168,7 @@ class MyLoginPage extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MySignUpPage()));
+                                builder: (context) => MyLoginPage()));
                       },
                     ),
                   ),
@@ -161,12 +224,27 @@ class MyLoginPage extends StatelessWidget {
                 ]))));
   }
 
+  Widget _showUsernameInput() {
+    return Padding(
+        padding: const EdgeInsets.only(top: 1.0),
+        child: TextFormField(
+            onSaved: (val) => _username = val!,
+            validator: (val) => val!.length < 6 ? 'Username too short' : null,
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Username',
+                hintText: 'Enter username, min length 6',
+                icon: Icon(Icons.face, color: Colors.grey))));
+  }
+
   Widget _showEmailInput() {
     return Padding(
         padding: const EdgeInsets.only(top: 1.0),
         child: TextFormField(
             onSaved: (val) => _email = val!,
-            validator: (val) => !val!.contains('@') ? 'Invalid Email' : null,
+            validator: (val) => !val!.contains('@') || !val!.contains('.')
+                ? 'Invalid Email'
+                : null,
             decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Email',

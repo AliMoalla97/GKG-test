@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:ui_first_project/Pages/LoginPage.dart';
 import 'package:ui_first_project/Pages/MainPage.dart';
 
@@ -138,10 +137,6 @@ class _MySignUpPageState extends State<MySignUpPage> {
                           final form = _formKey.currentState;
                           if (form!.validate()) {
                             form.save();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MainPage()));
                           }
                         },
                       ),
